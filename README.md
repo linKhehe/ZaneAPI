@@ -1,2 +1,2 @@
 # ZaneAPI
-A meme-loving, opensource, memory eating, image manipulation API.
+A meme-loving, open-source, memory eating, image manipulation API.
