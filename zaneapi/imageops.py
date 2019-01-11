@@ -54,6 +54,5 @@ def deepfry(img: Image):
     img.compression_quality = 2
     img.modulate(saturation=700)
     img.sample(512, 512)
-    img.format = "png"
 
     return img
