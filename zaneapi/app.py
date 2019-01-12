@@ -1,4 +1,4 @@
-from quart import Quart, render_template, jsonify
+from quart import Quart
 
 from .blueprints import api, home
 

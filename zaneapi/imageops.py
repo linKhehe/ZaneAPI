@@ -1,21 +1,17 @@
 import io
 import asyncio
 import functools
-import uuid
-
 
 from wand.image import Image
 
 loop = asyncio.get_event_loop()
 
 
-async def save_image(img: Image):
-    unique_uuid = str(uuid.uuid4())
-    file = f"C:\\Users\\Liam\\PycharmProjects\\Meme-Imaging\\ZaneAPI\\zaneapi\\tmp\\{unique_uuid}"
-    img.format = "png"
-    img.save(filename=file)
-
-    return unique_uuid
+def resize(img: Image, width: int):
+    if img.width < width and img.height < width:
+        aspect = img.width / img.height
+        img.sample(width=int(width), height=int(width * aspect))
+    return img
 
 
 async def image_function(input_img: Image, func, *args):
@@ -32,6 +28,8 @@ async def image_function(input_img: Image, func, *args):
 
 
 def magic(img: Image):
+    resize(img, 256)
+
     img.liquid_rescale(
         width=int(img.width * 0.5),
         height=int(img.height * 0.5),
@@ -44,15 +42,24 @@ def magic(img: Image):
         delta_x=2,
         rigidity=0
     )
-    img.sample(512, 512)
+
+    resize(img, 512)
 
     return img
 
 
 def deepfry(img: Image):
+    resize(img, 512)
+
     img.format = "jpeg"
     img.compression_quality = 2
     img.modulate(saturation=700)
-    img.sample(512, 512)
+
+    return img
+
+
+def invert(img: Image):
+    resize(img, 1920)
+    img.negate()
 
     return img
