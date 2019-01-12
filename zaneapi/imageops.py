@@ -43,8 +43,6 @@ def magic(img: Image):
         rigidity=0
     )
 
-    resize(img, 512)
-
     return img
 
 
