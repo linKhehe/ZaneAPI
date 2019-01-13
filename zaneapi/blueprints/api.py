@@ -2,8 +2,9 @@ import io
 
 from quart import Blueprint, request, jsonify, make_response
 from wand.image import Image
+from wand.color import Color
 
-from ..imageops import image_function, magic, deepfry, invert
+from ..imageops import *
 
 bp = Blueprint('api', __name__)
 
@@ -22,6 +23,52 @@ async def status():
     response.headers['Content-Type'] = "application/json"
     response.headers['Status'] = 200
 
+    return response
+    
+@bp.route("/desat", methods=["POST"])
+async def desat_endpoint():
+    # print(request.args)
+    threshold = int(request.args.get("threshold") or 2)
+    image = PILImage.open(io.BytesIO(await request.body))
+    image = await image_function(image, desat, threshold)
+
+    assert isinstance(image, io.BytesIO)
+    
+    response = await make_response(image.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "image/png"
+    
+    return response
+    
+
+@bp.route("/colormap", methods=["POST"])
+async def colormap_endpoint():
+    color_arg = request.args.get("color") or "#7289DA"
+    color_obj = Color(color_arg)
+    rgb = color_obj.red_int8, color_obj.blue_int8, color_obj.green_int8
+    image = PILImage.open(io.BytesIO(await request.body))
+    transformed = await image_function(image, colormap, rgb)
+    
+    assert isinstance(transformed, io.BytesIO)
+    
+    response = await make_response(transformed.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "image/png"
+    
+    return response
+    
+
+@bp.route("/noise", methods=["POST"])
+async def noise_endpoiint():
+    image = PILImage.open(io.BytesIO(await request.body))
+    transformed = await image_function(image, noise)
+    
+    assert isinstance(transformed, io.BytesIO)
+    
+    response = await make_response(transformed.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = 'image/png'
+    
     return response
 
 
