@@ -43,7 +43,7 @@ async def desat_endpoint():
 async def colormap_endpoint():
     color_arg = request.args.get("color") or "#7289DA"
     color_obj = Color(color_arg)
-    rgb = color_obj.red_int8, color_obj.blue_int8, color_obj.green_int8
+    rgb = color_obj.red_int8, color_obj.green_int8, color_obj.blue_int8
     image = PILImage.open(io.BytesIO(await request.body))
     transformed = await image_function(image, colormap, rgb)
     
