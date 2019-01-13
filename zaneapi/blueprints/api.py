@@ -41,7 +41,7 @@ async def desat_endpoint():
 
 @bp.route("/colormap", methods=["POST"])
 async def colormap_endpoint():
-    color_arg = request.args.get("color") or "#7289DA"
+    color_arg = f'#{((request.args.get("color") or "7289DA").replace("0x", "#").lstrip("#")):0>6}'
     color_obj = Color(color_arg)
     rgb = color_obj.red_int8, color_obj.green_int8, color_obj.blue_int8
     image = PILImage.open(io.BytesIO(await request.body))
