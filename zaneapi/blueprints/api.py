@@ -1,7 +1,4 @@
-import io
-
 from quart import Blueprint, request, jsonify, make_response
-from wand.image import Image
 from wand.color import Color
 
 from ..imageops import *
@@ -24,10 +21,11 @@ async def status():
     response.headers['Status'] = 200
 
     return response
-    
+
+
 @bp.route("/desat", methods=["POST"])
+@bp.route("/desaturation", methods=["POST"])
 async def desat_endpoint():
-    # print(request.args)
     threshold = int(request.args.get("threshold") or 2)
     image = PILImage.open(io.BytesIO(await request.body))
     image = await image_function(image, desat, threshold)
@@ -59,7 +57,7 @@ async def colormap_endpoint():
     
 
 @bp.route("/noise", methods=["POST"])
-async def noise_endpoiint():
+async def noise_endpoint():
     image = PILImage.open(io.BytesIO(await request.body))
     transformed = await image_function(image, noise)
     

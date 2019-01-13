@@ -10,12 +10,52 @@ from PIL import Image as PILImage
 loop = asyncio.get_event_loop()
 
 
-def resize(img: Image, width: int):
-    if img.width < width and img.height < width:
-        aspect = img.width / img.height
-        img.sample(width=int(width), height=int(width * aspect))
+async def image_function(input_img: Image, func, *args):
+    executor = functools.partial(func, input_img, *args)
+    output_img = await loop.run_in_executor(None, executor)
+
+    # assert isinstance(output_img, (Image, PILImage))
+
+    b_io = io.BytesIO()
+    if isinstance(output_img, Image):
+        output_img.save(b_io)
+    else:
+        output_img.save(b_io, "png")
+    b_io.seek(0)
+
+    return b_io
+
+
+def magic(img: Image):
+    img.liquid_rescale(
+        width=int(img.width * 0.5),
+        height=int(img.height * 0.5),
+        delta_x=1,
+        rigidity=0
+    )
+    img.liquid_rescale(
+        width=int(img.width * 1.5),
+        height=int(img.height * 1.5),
+        delta_x=2,
+        rigidity=0
+    )
+
     return img
-	
+
+
+def deepfry(img: Image):
+    img.format = "jpeg"
+    img.compression_quality = 2
+    img.modulate(saturation=700)
+
+    return img
+
+
+def invert(img: Image):
+    img.negate()
+
+    return img
+
 
 def desat(img: PILImage, threshold: int = 2):
     img_new = PILImage.new("RGBA", img.size)
@@ -27,7 +67,7 @@ def desat(img: PILImage, threshold: int = 2):
             s /= threshold
             img_new.putpixel((x, y), tuple(map(int, colorsys.hsv_to_rgb(h, s, v))))
     return img_new
-    
+
 
 def colormap(img: PILImage, color: tuple):
     bh, _, _ = colorsys.rgb_to_hsv(*color)
@@ -52,55 +92,3 @@ def noise(img: PILImage):
             shuffle(_px)
             img_new.putpixel((x, y), tuple(_px))
     return img_new
-
-
-async def image_function(input_img: Image, func, *args):
-    executor = functools.partial(func, input_img, *args)
-    output_img = await loop.run_in_executor(None, executor)
-
-    # assert isinstance(output_img, (Image, PILImage))
-
-    b_io = io.BytesIO()
-    if isinstance(output_img, Image):
-        output_img.save(b_io)
-    else:
-        output_img.save(b_io, "png")
-    b_io.seek(0)
-
-    return b_io
-
-
-def magic(img: Image):
-    resize(img, 256)
-
-    img.liquid_rescale(
-        width=int(img.width * 0.5),
-        height=int(img.height * 0.5),
-        delta_x=1,
-        rigidity=0
-    )
-    img.liquid_rescale(
-        width=int(img.width * 1.5),
-        height=int(img.height * 1.5),
-        delta_x=2,
-        rigidity=0
-    )
-
-    return img
-
-
-def deepfry(img: Image):
-    resize(img, 512)
-
-    img.format = "jpeg"
-    img.compression_quality = 2
-    img.modulate(saturation=700)
-
-    return img
-
-
-def invert(img: Image):
-    resize(img, 1920)
-    img.negate()
-
-    return img

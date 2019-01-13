@@ -1,23 +1,156 @@
-<!doctype html>
-
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
   <meta charset="utf-8">
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+  <meta charset="utf-8">
+  <script>hljs.initHighlightingOnLoad();</script>
+  <meta property="og:title" content="MagmaChain" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="http://magmachain.herokuapp.com" />
+  <meta property="og:description" content="A fast screenshot API made by F4stZ4p#3507 and chr1s#7185." />
+  <meta name="theme-color" content="#D42A42" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <style>
+  body {
+      background-image: linear-gradient(to right, #BF4691 ,#905CAB);
+      color: white;
+      margin-top: 5rem;
+    }
 
-  <title>The HTML5 Herald</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+    h1, h2, h3, h4, h5, h6 {
+      color: #ffffff;
+    }
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+    ul {
+      margin: 0;
+    }
 
+    .bg-steel {
+      background-color: linear-gradient(to right, #84FED0 ,#48E7FE);
+    }
+
+    .site-header .navbar-nav .nav-link {
+      color: linear-gradient(to right, #84FED0 ,#48E7FE);
+    }
+
+    .site-header .navbar-nav .nav-link:hover {
+      color: linear-gradient(to right, #84FED0 ,#48E7FE);
+    }
+
+    .site-header .navbar-nav .nav-link.active {
+      font-weight: 500;
+    }
+
+    .content-section {
+      background: linear-gradient(to right, #12CCAF ,#B4E65A);
+      padding: 10px 20px;
+      border: 1px solid #dddddd;
+      border-radius: 3px;
+      margin-bottom: 20px;
+    }
+
+    .article-title {
+      color: white;
+    }
+
+    a.article-title:hover {
+      color: palegoldenrod;
+      text-decoration: none;
+    }
+
+    .article-content {
+      white-space: pre-line;
+    }
+
+    .article-img {
+      height: 65px;
+      width: 65px;
+      margin-right: 16px;
+    }
+
+    .article-metadata {
+      padding-bottom: 1px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid #e3e3e3
+    }
+
+    .article-metadata a:hover {
+      color: white;
+      text-decoration: none;
+    }
+
+    .article-svg {
+      width: 25px;
+      height: 25px;
+      vertical-align: middle;
+    }
+
+    .account-img {
+      height: 125px;
+      width: 125px;
+      margin-right: 20px;
+      margin-bottom: 16px;
+    }
+    .account-heading {
+      font-size: 2.5rem;
+    }
+
+    .link {
+            color:#B62E43;
+            text-decoration: none;
+            background-color: none;
+    }
+
+  </style>
+  <title>Zane API</title>
 </head>
-
 <body>
-    <h1>
-        Welcome to the Zane API homepage.
-    </h1>
-    <p>
-        {{ message }}
-    </p>
+  <header class="site-header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+      <div class="container">
+        <a class="navbar-brand mr-4" href="#">Zane API</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggle">
+          <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="/deadlink">Help</a>
+            <a class="nav-item nav-link" href="/deadlink">Examples</a>
+          </div>
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/status">Status</a>
+            <a class="nav-item nav-link" href="#">News</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <h1 style="text-align: center">Zane API</h1>
+  <main role="main" class="container">
+    <div class="row">
+      <div class="col-md-8"></div>
+      <div class="col-md-4">
+      </div>
+    </div>
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <a class="mr-2">Zane API</a><br>
+        </div>
+        <h2><a class="article-title" href="#">Info</a></h2>
+        <h5 class="article-content container">
+            Info goes here
+      </h1>
+        </h5>
+      </div>
+    </article>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>
