@@ -10,6 +10,16 @@ from PIL import Image as PILImage
 loop = asyncio.get_event_loop()
 
 
+async def resize(image: Img, max_size: int = 512):
+    if image.width > max_size:
+        aspect = img.height / img.width
+        img.resize(max_size, img.height * max_size)
+    elif image.height > max_size:
+        aspect = img.width / img.height
+        img.resize(img.width * max_size, max_size)
+    return image
+        
+    
 async def image_function(input_img: Image, func, *args):
     executor = functools.partial(func, input_img, *args)
     output_img = await loop.run_in_executor(None, executor)
