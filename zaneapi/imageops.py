@@ -18,6 +18,7 @@ async def image_function(input_img: Image, func, *args):
 
     b_io = io.BytesIO()
     if isinstance(output_img, Image):
+        output_img.format = "png"
         output_img.save(b_io)
     else:
         output_img.save(b_io, "png")
@@ -52,9 +53,16 @@ def deepfry(img: Image):
 
 
 def invert(img: Image):
-    img.negate()
-
-    return img
+    with img:
+        img.negate()
+    
+        # this shouldn't be necessary but this is returning
+        # blank images so I am gonna make a new image from 
+        # the inverted one and try that
+    
+        output_img = Image(img)
+    
+    return output_img
 
 
 def desat(img: PILImage, threshold: int = 2):
