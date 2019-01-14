@@ -2,3 +2,4 @@ aiohttp
 wand
 pillow
 quart
+colorsys
