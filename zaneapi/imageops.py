@@ -10,13 +10,11 @@ from PIL import Image as PILImage
 loop = asyncio.get_event_loop()
 
 
-async def resize(image: Img, max_size: int = 512):
+def resize(image: Img, max_size: int = 512):
     if image.width > max_size:
-        aspect = img.height / img.width
-        img.resize(max_size, img.height * max_size)
+        image.transform(f"{max_size}")
     elif image.height > max_size:
-        aspect = img.width / img.height
-        img.resize(img.width * max_size, max_size)
+        image.transform(f"x{max_size}")
     return image
         
     
@@ -38,6 +36,7 @@ async def image_function(input_img: Image, func, *args):
 
 
 def magic(img: Image):
+    resize(img, 256)
     img.liquid_rescale(
         width=int(img.width * 0.5),
         height=int(img.height * 0.5),
@@ -55,6 +54,7 @@ def magic(img: Image):
 
 
 def deepfry(img: Image):
+    resize(img)
     img.format = "jpeg"
     img.compression_quality = 2
     img.modulate(saturation=700)
@@ -64,6 +64,7 @@ def deepfry(img: Image):
 
 def invert(img: Image):
     with img:
+        resize(img)
         img.negate()
     
         # this shouldn't be necessary but this is returning
