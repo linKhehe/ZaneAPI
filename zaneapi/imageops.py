@@ -12,9 +12,9 @@ loop = asyncio.get_event_loop()
 
 def resize(image: Img, max_size: int = 512):
     if image.width > max_size:
-        image.transform(f"{max_size}")
+        image.transform(resize=f"{max_size}")
     elif image.height > max_size:
-        image.transform(f"x{max_size}")
+        image.transform(resize=f"x{max_size}")
     return image
         
     
