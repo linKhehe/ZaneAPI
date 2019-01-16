@@ -1,2 +1,1 @@
-# ZaneAPI
-A meme-loving, open-source, memory eating, image manipulation API.
+View the documentation for the Zane API [here](https://zaneapi-docs.rtfd.io).
