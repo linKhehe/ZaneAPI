@@ -1,23 +1,20 @@
 import io
 import asyncio
 import functools
-from random import shuffle
 
 import colorsys
 from wand.image import Image
+from wand.color import Color
 from PIL import Image as PILImage
 
 loop = asyncio.get_event_loop()
 
 
-def resize(image: Img, max_size: int = 512):
-    if image.width > max_size:
-        image.transform(resize=f"{max_size}")
-    elif image.height > max_size:
-        image.transform(resize=f"x{max_size}")
-    return image
-        
-    
+def resize(image: Image, max_size: int = 512):
+    image.transform(resize=f'x{max_size}')
+    image.transform(resize=f'{max_size}')
+
+
 async def image_function(input_img: Image, func, *args):
     executor = functools.partial(func, input_img, *args)
     output_img = await loop.run_in_executor(None, executor)
@@ -63,29 +60,17 @@ def deepfry(img: Image):
 
 
 def invert(img: Image):
-    with img:
-        resize(img)
-        img.negate()
-    
-        # this shouldn't be necessary but this is returning
-        # blank images so I am gonna make a new image from 
-        # the inverted one and try that
-    
-        output_img = Image(img)
-    
-    return output_img
+    img.alpha_channel = False
+    img.negate()
+
+    return img
 
 
-def desat(img: PILImage, threshold: int = 2):
-    img_new = PILImage.new("RGBA", img.size)
-    _x, _y = img.size
-    for x in range(_x):
-        for y in range(_y):
-            px = img.getpixel((x, y))
-            h, s, v = colorsys.rgb_to_hsv(*px[:3])
-            s /= threshold
-            img_new.putpixel((x, y), tuple(map(int, colorsys.hsv_to_rgb(h, s, v))))
-    return img_new
+def desat(img: Image, threshold: int = 2):
+    resize(img)
+    img.modulate(saturation=100-(threshold*15))
+
+    return img
 
 
 def colormap(img: PILImage, color: tuple):
@@ -101,13 +86,31 @@ def colormap(img: PILImage, color: tuple):
     return img_new
 
 
-def noise(img: PILImage):
-    _x, _y = img.size
-    img_new = PILImage.new("RGBA", img.size)
-    for x in range(_x):
-        for y in range(_y):
-            px = img.getpixel((x, y))
-            _px = list(px[:3])
-            shuffle(_px)
-            img_new.putpixel((x, y), tuple(_px))
-    return img_new
+def noise(img: Image):
+    resize(img, 256)
+    img.evaluate()
+
+    return img
+
+
+def arc(img: Image):
+    resize(img)
+    img.distort(method='arc', arguments=[360])
+
+    return img
+
+
+def concave(img: Image):
+    resize(img)
+    img.background_color = Color("white")
+    img.distort(method="barrel", arguments=[-0.2, 0.0, 0.0, 1.3])
+
+    return img
+
+
+def convex(img: Image):
+    resize(img)
+    img.background_color = Color("white")
+    img.distort(method="barrel", arguments=[0.2, 0.0, 0.0, 1.0])
+
+    return img

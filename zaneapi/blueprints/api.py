@@ -27,15 +27,15 @@ async def status():
 @bp.route("/desaturation", methods=["POST"])
 async def desat_endpoint():
     threshold = int(request.args.get("threshold") or 2)
-    image = PILImage.open(io.BytesIO(await request.body))
+    image = Image(blob=await request.body)
     image = await image_function(image, desat, threshold)
 
     assert isinstance(image, io.BytesIO)
-    
+
     response = await make_response(image.getvalue())
     response.headers['Status'] = 200
     response.headers['Content-Type'] = "image/png"
-    
+
     return response
     
 
@@ -58,15 +58,15 @@ async def colormap_endpoint():
 
 @bp.route("/noise", methods=["POST"])
 async def noise_endpoint():
-    image = PILImage.open(io.BytesIO(await request.body))
-    transformed = await image_function(image, noise)
-    
-    assert isinstance(transformed, io.BytesIO)
-    
-    response = await make_response(transformed.getvalue())
+    image = Image(blob=await request.body)
+    image = await image_function(image, noise)
+
+    assert isinstance(image, io.BytesIO)
+
+    response = await make_response(image.getvalue())
     response.headers['Status'] = 200
-    response.headers['Content-Type'] = 'image/png'
-    
+    response.headers['Content-Type'] = "image/png"
+
     return response
 
 
@@ -104,6 +104,48 @@ async def deepfry_endpoint():
 async def invert_endpoint():
     image = Image(blob=await request.body)
     image = await image_function(image, invert)
+
+    assert isinstance(image, io.BytesIO)
+
+    response = await make_response(image.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "image/png"
+
+    return response
+
+
+@bp.route("/arc", methods=["POST"])
+async def arc_endpoint():
+    image = Image(blob=await request.body)
+    image = await image_function(image, arc)
+
+    assert isinstance(image, io.BytesIO)
+
+    response = await make_response(image.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "image/png"
+
+    return response
+
+
+@bp.route("/concave", methods=["POST"])
+async def concave_endpoint():
+    image = Image(blob=await request.body)
+    image = await image_function(image, concave)
+
+    assert isinstance(image, io.BytesIO)
+
+    response = await make_response(image.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "image/png"
+
+    return response
+
+
+@bp.route("/convex", methods=["POST"])
+async def convex_endpoint():
+    image = Image(blob=await request.body)
+    image = await image_function(image, convex)
 
     assert isinstance(image, io.BytesIO)
 
