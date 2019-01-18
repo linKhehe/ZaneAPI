@@ -53,7 +53,7 @@ def magic(img: Image):
 def deepfry(img: Image):
     resize(img)
     img.format = "jpeg"
-    img.compression_quality = 2
+    img.compression_quality = 1
     img.modulate(saturation=700)
 
     return img
@@ -66,9 +66,16 @@ def invert(img: Image):
     return img
 
 
-def desat(img: Image, threshold: int = 2):
+def desat(img: Image, threshold: int = 1):
     resize(img)
-    img.modulate(saturation=100-(threshold*15))
+    img.modulate(saturation=100-(threshold*50))
+
+    return img
+
+
+def sat(img: Image, threshold: int = 1):
+    resize(img)
+    img.modulate(saturation=100+(threshold*50))
 
     return img
 
@@ -88,13 +95,17 @@ def colormap(img: PILImage, color: tuple):
 
 def noise(img: Image):
     resize(img, 256)
-    img.evaluate()
+    img = img.fx("""iso=32; rone=rand(); rtwo=rand(); \
+myn=sqrt(-2*ln(rone))*cos(2*Pi*rtwo); myntwo=sqrt(-2*ln(rtwo))* \
+cos(2*Pi*rone); pnoise=sqrt(p)*myn*sqrt(iso)* \
+channel(4.28,3.86,6.68,0)/255; max(0,p+pnoise)""")
 
     return img
 
 
 def arc(img: Image):
     resize(img)
+    img.virtual_pixel = "transparent"
     img.distort(method='arc', arguments=[360])
 
     return img
@@ -102,15 +113,122 @@ def arc(img: Image):
 
 def concave(img: Image):
     resize(img)
+    img.virtual_pixel = "transparent"
     img.background_color = Color("white")
-    img.distort(method="barrel", arguments=[-0.2, 0.0, 0.0, 1.3])
+    img.distort(method="barrel", arguments=[-.5, 0.0, 0.0, 1])
 
     return img
 
 
 def convex(img: Image):
     resize(img)
+    img.virtual_pixel = "transparent"
     img.background_color = Color("white")
-    img.distort(method="barrel", arguments=[0.2, 0.0, 0.0, 1.0])
+    img.distort(method="barrel", arguments=[1, 0, 0, 1])
+
+    return img
+
+
+def floor(img: Image):
+    resize(img, 128)
+    img.alpha_channel = False
+    img.background_color = Color("light-blue")
+    img.virtual_pixel = "tile"
+
+    img.distort(
+        method="perspective",
+        arguments=[
+            0,
+            0,
+            20,
+            61,
+
+            90,
+            0,
+            70,
+            63,
+
+            0,
+            90,
+            0,
+            83,
+
+            90,
+            90,
+            85,
+            88
+        ]
+    )
+
+    img.sample(256, 256)
+
+    return img
+
+
+def blur(img: Image):
+    resize(img)
+    img.blur(0, 5)
+
+    return img
+
+
+def vaporwave(img: Image):
+    resize(img)
+    frequency = 3
+    phase_shift = -90
+    amplitude = 0.2
+    bias = 0.7
+    img.function('sinusoid', [frequency, phase_shift, amplitude, bias])
+
+    return img
+
+
+def emboss(img: Image):
+    resize(img)
+    img.transform_colorspace('gray')
+    img.emboss(radius=3, sigma=50)
+
+    return img
+
+
+def shade(img: Image):
+    resize(img)
+    img.shade(
+        gray=True,
+        azimuth=286.0,
+        elevation=45.0
+    )
+
+    return img
+
+
+def edge(img: Image):
+    resize(img)
+    img.alpha_channel = False
+    img.transform_colorspace('gray')
+    img.edge(2)
+
+    return img
+
+
+def bend(img: Image):
+    resize(img)
+    img.alpha_channel = False
+    img.virtual_pixel = "transparent"
+    img.distort(method="plane_2_cylinder", arguments=[90])
+
+    return img
+
+
+def posterize(img: Image):
+    resize(img)
+    img.posterize(2)
+
+    return img
+
+
+def grayscale(img: Image):
+    resize(img)
+    img.transform_colorspace('gray')
 
     return img
