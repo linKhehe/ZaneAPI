@@ -230,3 +230,12 @@ def grayscale(img: Image):
     img.transform_colorspace('gray')
 
     return img
+
+
+def lsd(img: Image):
+    resize(img)
+    img.alpha_channel = False
+    img.function('sinusoid', [3, -90, 0.2, 0.7])
+    img.modulate(saturation=200, brightness=75)
+
+    return img
