@@ -160,7 +160,7 @@ def floor(img: Image):
         ]
     )
 
-    img.sample(256, 256)
+    resize(img, 512)
 
     return img
 
@@ -174,6 +174,7 @@ def blur(img: Image):
 
 def vaporwave(img: Image):
     resize(img)
+    img.alpha_channel = False
     frequency = 3
     phase_shift = -90
     amplitude = 0.2
