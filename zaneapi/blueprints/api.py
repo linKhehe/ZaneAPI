@@ -296,3 +296,17 @@ async def grayscale_endpoint():
     response.headers['Content-Type'] = "image/png"
 
     return response
+
+
+@bp.route("/lsd", methods=["POST"])
+async def lsd_endpoint():
+    image = Image(blob=await request.body)
+    image = await image_function(image, lsd)
+
+    assert isinstance(image, io.BytesIO)
+
+    response = await make_response(image.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "image/png"
+
+    return response
