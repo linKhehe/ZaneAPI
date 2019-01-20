@@ -175,11 +175,8 @@ def blur(img: Image):
 def vaporwave(img: Image):
     resize(img)
     img.alpha_channel = False
-    frequency = 3
-    phase_shift = -90
-    amplitude = 0.2
-    bias = 0.7
-    img.function('sinusoid', [frequency, phase_shift, amplitude, bias])
+    img.function('sinusoid', [3, -90, 0.2, 0.7])
+    img.modulate(saturation=25, brightness=75)
 
     return img
 
