@@ -2,4 +2,6 @@ aiohttp
 wand
 pillow
 quart
-colorsys
+skimage
+numpy
+scipy

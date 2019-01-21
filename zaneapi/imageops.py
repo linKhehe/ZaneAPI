@@ -1,11 +1,15 @@
 import io
 import asyncio
 import functools
+import numpy
+import random
 
 import colorsys
 from wand.image import Image
 from wand.color import Color
 from PIL import Image as PILImage
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
 
 loop = asyncio.get_event_loop()
 
@@ -23,7 +27,12 @@ async def image_function(input_img: Image, func, *args):
 
     b_io = io.BytesIO()
     if isinstance(output_img, Image):
-        output_img.format = "png"
+        b_io_convert = io.BytesIO()
+        if output_img.format == "jpeg":
+            output_img.save(b_io_convert)
+            with Image(blob=b_io_convert.getvalue()) as converted:
+                converted.format = "png"
+                output_img = converted
         output_img.save(b_io)
     else:
         output_img.save(b_io, "png")
@@ -193,8 +202,8 @@ def shade(img: Image):
     resize(img)
     img.shade(
         gray=True,
-        azimuth=286.0,
-        elevation=45.0
+        azimuth=300.0,
+        elevation=50.0
     )
 
     return img
@@ -237,5 +246,14 @@ def lsd(img: Image):
     img.alpha_channel = False
     img.function('sinusoid', [3, -90, 0.2, 0.7])
     img.modulate(saturation=200, brightness=75)
+
+    return img
+
+
+def sort(img: numpy.ndarray):
+    img.sort(0)
+    img.sort(1)
+
+    img = PILImage.fromarray(img)
 
     return img

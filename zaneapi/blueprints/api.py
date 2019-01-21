@@ -1,5 +1,7 @@
 from quart import Blueprint, request, jsonify, make_response
 from wand.color import Color
+from skimage import io
+import skimage
 
 from ..imageops import *
 
@@ -302,6 +304,20 @@ async def grayscale_endpoint():
 async def lsd_endpoint():
     image = Image(blob=await request.body)
     image = await image_function(image, lsd)
+
+    assert isinstance(image, io.BytesIO)
+
+    response = await make_response(image.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "image/png"
+
+    return response
+
+
+@bp.route("/sort", methods=["POST"])
+async def sort_endpoint():
+    image = skimage.io.imread(io.BytesIO(await request.body))
+    image = await image_function(image, sort)
 
     assert isinstance(image, io.BytesIO)
 
