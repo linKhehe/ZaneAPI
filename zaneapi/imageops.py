@@ -3,6 +3,8 @@ import asyncio
 import functools
 import numpy
 import random
+import math
+import os
 
 import colorsys
 from wand.image import Image
@@ -12,6 +14,37 @@ from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 
 loop = asyncio.get_event_loop()
+
+
+class AsciiColor(Color):
+    """
+    A little subclass of wand.color.Color
+    Adds functionality for ascii art.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.ascii_characters = {
+            300: "@",
+            275: "#",
+            250: ";",
+            225: "+",
+            200: "=",
+            175: ":",
+            150: "-",
+            125: "\"",
+            100: ",",
+            75: "'",
+            50: ".",
+            25: " ",
+            0: " "
+        }
+        super().__init__(*args, **kwargs)
+
+    @property
+    def ascii_character(self):
+        value = self.red + self.green + self.blue
+        value *= 100
+        return self.ascii_characters[int(math.ceil(value / 25.) * 25)]
 
 
 def resize(image: Image, max_size: int = 512):
@@ -25,7 +58,11 @@ async def image_function(input_img: Image, func, *args):
 
     # assert isinstance(output_img, (Image, PILImage))
 
+    if isinstance(output_img, str):
+        return output_img
+
     b_io = io.BytesIO()
+
     if isinstance(output_img, Image):
         b_io_convert = io.BytesIO()
         if output_img.format == "jpeg":
@@ -198,15 +235,41 @@ def emboss(img: Image):
     return img
 
 
-def shade(img: Image):
-    resize(img)
-    img.shade(
-        gray=True,
-        azimuth=300.0,
-        elevation=50.0
-    )
+def shade(img: PILImage):
+    # defining azimuth, elevation, and depth
+    ele = numpy.pi / 2.2  # radians
+    azi = numpy.pi / 4.  # radians
+    dep = 10.  # (0-100)
 
-    return img
+    img = img.convert("L")
+    # get an array
+    a = numpy.asarray(img).astype('float')
+    # find the gradient
+    grad = numpy.gradient(a)
+    # (it is two arrays: grad_x and grad_y)
+    grad_x, grad_y = grad
+    # getting the unit incident ray
+    gd = numpy.cos(ele)  # length of projection of ray on ground plane
+    dx = gd * numpy.cos(azi)
+    dy = gd * numpy.sin(azi)
+    dz = numpy.sin(ele)
+    # adjusting the gradient by the "depth" factor
+    # (I think this is how GIMP defines it)
+    grad_x = grad_x * dep / 100.
+    grad_y = grad_y * dep / 100.
+    # finding the unit normal vectors for the image
+    leng = numpy.sqrt(grad_x ** 2 + grad_y ** 2 + 1.)
+    uni_x = grad_x / leng
+    uni_y = grad_y / leng
+    uni_z = 1. / leng
+    # take the dot product
+    a2 = 255 * (dx * uni_x + dy * uni_y + dz * uni_z)
+    # avoid overflow
+    a2 = a2.clip(0, 255)
+    # you must convert back to uint8 /before/ converting to an image
+    img2 = PILImage.fromarray(a2.astype('uint8'))
+
+    return img2
 
 
 def edge(img: Image):
@@ -257,3 +320,91 @@ def sort(img: numpy.ndarray):
     img = PILImage.fromarray(img)
 
     return img
+
+
+# def histogram(img: numpy.ndarray):
+#     r = []
+#     g = []
+#     b = []
+#
+#     flat_img = img.flatten()
+#
+#     for px in range(0, flat_img.size, int(flat_img.size / 100)):
+#         r.append(flat_img[px])
+#     for px in range(1, flat_img.size, int(flat_img.size / 100)):
+#         g.append(flat_img[px])
+#     for px in range(2, flat_img.size, int(flat_img.size / 100)):
+#         b.append(flat_img[px])
+#
+#     fig = plt.figure()
+#     ax = fig.add_subplot(111, projection='3d')
+#     nbins = 20
+#
+#     for c, z, i in zip([r, g, b], [20, 10, 0], ["r", "g", "b"]):
+#         hist, bins = numpy.histogram(c, bins=nbins)
+#
+#         colors = []
+#         for c_i in range(0, 255, int(255 / 20)):
+#             value = c_i / 255
+#             if i == "r":
+#                 colors.append([value, 0, 0, 1])
+#             elif i == "g":
+#                 colors.append([0, value, 0, 1])
+#             elif i == "b":
+#                 colors.append([0, 0, value, 1])
+#
+#         colors.sort()
+#
+#         xs = (bins[:-1] + bins[1:]) / 3
+#
+#         ax.bar(xs, hist, width=7, zs=z, zdir='y', color=colors, ec=colors, alpha=1)
+#
+#     plt.xlabel("Color Intensity")
+#     ax.set_zlabel("Number of pixels.")
+#
+#     buff = io.BytesIO()
+#     plt.savefig(buff, format='png')
+#     plt.clf()
+#     buff.seek(0)
+#
+#     img = PILImage.open(buff)
+#
+#     return img
+
+
+def gay(img: Image):
+    with Image(filename=f"{os.path.dirname(os.path.realpath(__file__))}\\api_assets\\gay.jpg") as gay:
+        img.transform_colorspace("gray")
+        img.transform_colorspace("rgb")
+        gay.transparentize(.50)
+        gay.sample(img.width, img.height)
+        img.composite(gay, 0, 0)
+    return img
+
+
+def straight(img: Image):
+    with Image(filename=f"{os.path.dirname(os.path.realpath(__file__))}\\api_assets\\straight.png") as straight:
+        img.resize(640, 440)
+        straight.composite(img, left=0, top=157)
+        img = straight.clone()
+
+    return img
+
+
+def ascii_art(img: Image):
+    with img:
+        size = 200
+        img.sample(size, int(size / 2))
+
+        asciiart = ""
+
+        first_iter = True
+        for row in img:
+            if not first_iter:
+                asciiart += "\n"
+            first_iter = False
+            for col in row:
+                with AsciiColor(str(col)) as c:
+                    asciiart += c.ascii_character
+
+    return asciiart

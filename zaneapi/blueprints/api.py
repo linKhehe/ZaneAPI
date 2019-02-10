@@ -55,7 +55,7 @@ async def sat_endpoint():
     response.headers['Content-Type'] = "image/png"
 
     return response
-    
+
 
 @bp.route("/colormap", methods=["POST"])
 async def colormap_endpoint():
@@ -64,15 +64,15 @@ async def colormap_endpoint():
     rgb = color_obj.red_int8, color_obj.green_int8, color_obj.blue_int8
     image = PILImage.open(io.BytesIO(await request.body))
     transformed = await image_function(image, colormap, rgb)
-    
+
     assert isinstance(transformed, io.BytesIO)
-    
+
     response = await make_response(transformed.getvalue())
     response.headers['Status'] = 200
     response.headers['Content-Type'] = "image/png"
-    
+
     return response
-    
+
 
 @bp.route("/noise", methods=["POST"])
 async def noise_endpoint():
@@ -232,7 +232,7 @@ async def emboss_endpoint():
 
 @bp.route("/shade", methods=["POST"])
 async def shade_endpoint():
-    image = Image(blob=await request.body)
+    image = PILImage.open(io.BytesIO(await request.body))
     image = await image_function(image, shade)
 
     assert isinstance(image, io.BytesIO)
@@ -324,5 +324,61 @@ async def sort_endpoint():
     response = await make_response(image.getvalue())
     response.headers['Status'] = 200
     response.headers['Content-Type'] = "image/png"
+
+    return response
+
+
+# @bp.route("/histogram", methods=["POST"])
+# async def histogram_endpoint():
+#     image = skimage.io.imread(io.BytesIO(await request.body))
+#     image = await image_function(image, histogram)
+#
+#     assert isinstance(image, io.BytesIO)
+#
+#     response = await make_response(image.getvalue())
+#     response.headers['Status'] = 200
+#     response.headers['Content-Type'] = "image/png"
+#
+#     return response
+
+
+@bp.route("/gay", methods=["POST"])
+async def gay_endpoint():
+    image = Image(blob=await request.body)
+    image = await image_function(image, gay)
+
+    assert isinstance(image, io.BytesIO)
+
+    response = await make_response(image.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "image/png"
+
+    return response
+
+
+@bp.route("/straight", methods=["POST"])
+async def straight_endpoint():
+    image = Image(blob=await request.body)
+    image = await image_function(image, straight)
+
+    assert isinstance(image, io.BytesIO)
+
+    response = await make_response(image.getvalue())
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "image/png"
+
+    return response
+
+
+@bp.route("/ascii", methods=["POST"])
+async def ascii_endpoint():
+    image = Image(blob=await request.body)
+    image = await image_function(image, ascii_art)
+
+    assert isinstance(image, str)
+
+    response = await make_response(jsonify({"ascii": image}))
+    response.headers['Status'] = 200
+    response.headers['Content-Type'] = "application/json"
 
     return response
