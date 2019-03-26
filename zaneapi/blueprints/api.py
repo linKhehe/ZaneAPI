@@ -1,4 +1,4 @@
-import ..imageops
+import imageops
 import io
 
 bp = Blueprint('api', __name__)
