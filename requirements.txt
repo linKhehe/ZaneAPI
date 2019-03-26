@@ -2,6 +2,6 @@ aiohttp
 wand
 pillow
 quart
-skimage
+skikit-image
 numpy
 scipy
