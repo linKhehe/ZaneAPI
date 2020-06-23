@@ -1,1 +1,1 @@
-from .app import zane
+from .app import create_app

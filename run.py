@@ -1,4 +1,7 @@
-from zaneapi import zane
+import zaneapi
+import config
+
 
 if __name__ == "__main__":
-    zane.run(host="0.0.0.0", port=80)
+    app = zaneapi.create_app(config.Config)
+    app.run(port=5000)

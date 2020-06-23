@@ -1,8 +1,14 @@
-from quart import Quart
+from flask import Flask
 
-from .blueprints import api, home
 
-zane = Quart(__name__)
+def create_app(config):
+    """Create an instance of the Flask application."""
+    app = Flask(__name__)
 
-zane.register_blueprint(api.bp, "/api/v0")
-zane.register_blueprint(home.bp, "/")
+    app.config.from_object(config)
+
+    from .blueprints import api
+
+    app.register_blueprint(api.bp, url_prefix="/api")
+
+    return app

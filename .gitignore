@@ -1,9 +1,0 @@
-__pycache__/
-*.py[cod]
-.venv/
-venv/
-env/
-ENV/
-env.bak/
-venv.bak/
-*.swp

@@ -1,7 +1,2 @@
-aiohttp
-wand
-pillow
-quart
-skikit-image
-numpy
-scipy
+blissops
+flask
