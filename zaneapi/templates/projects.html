@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+        <style>
+            .hyperlink {
+                color: var(--bs-dark);
+            }
+
+            .hyperlink:hover {
+                color: var(--bs-dark);
+            }
+        </style>
+
+        <title>Zane API</title>
+    </head>
+    <body>
+        <div style="height: 100vh;">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div style="padding-left: 28px; padding-right: 28px;" class="container">
+                    <a class="navbar-brand" href="/">Zane API</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://docs.zane.ip-bash.com/">Documentation</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/projects">Projects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://discord.gg/Jneh6QT4w9">Discord</a>
+                            </li>
+                        </ul>
+                        {% if user %}
+                        <a class="btn me-2 btn-outline-primary">Logged in as {{ user.username }}</a>
+                        <a class="btn btn-outline-danger" href="/logout">Log Out</a>
+                        {% else %}
+                        <a class="btn btn-outline-info" href="/login">Log In</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container">
+                <div class="m-3 bg-light p-5 shadow-sm">
+                    <div class="mx-auto">
+                        <h1 class="fw-bold display-5 text-dark">Projects</h1>
+                        <p class="lead text-dark">{{ 10 - projects.__len__() }} project slots remaining.</p>
+                        <a href="/projects/create" class="btn btn-outline-dark fw-bold me-1">Create Project</a>
+                    </div>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-2 g-4 m-3">
+                    {% for project in projects %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ project.name }}</h5>
+                                <p class="card-text">{{ project.description }}</p>
+                                <a href="/projects/{{ project.id }}/" class="btn btn-outline-dark fw-bold me-1 position-relative">View</a>
+                                <a href="/projects/{{ project.id }}/edit" class="btn btn-outline-dark fw-bold me-1 position-relative">Edit</a>
+                                <a href="/projects/{{ project.id }}/delete" class="btn btn-outline-danger fw-bold me-1 position-relative">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <p class="ms-3 text-muted">Copyright Liam H. 2021 - linK#0001 - linKhehe</p>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    </body>
+</html>

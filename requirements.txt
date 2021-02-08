@@ -1,0 +1,10 @@
+Flask
+redis
+hiredis
+requests_oauthlib
+Wand
+Pillow
+numpy
+matplotlib
+requests
+scikit-image

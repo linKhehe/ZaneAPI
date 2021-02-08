@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+        <style>
+            .hyperlink {
+                color: var(--bs-dark);
+            }
+
+            .hyperlink:hover {
+                color: var(--bs-dark);
+            }
+        </style>
+
+        <title>Zane API</title>
+    </head>
+    <body>
+        <div style="height: 100vh;">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div style="padding-left: 28px; padding-right: 28px;" class="container">
+                    <a class="navbar-brand" href="/">Zane API</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://docs.zane.ip-bash.com/">Documentation</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/projects">Projects</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="https://discord.gg/Jneh6QT4w9">Discord</a>
+                            </li>
+                        </ul>
+                        {% if user %}
+                        <a class="btn me-2 btn-outline-primary">Logged in as {{ user.username }}</a>
+                        <a class="btn btn-outline-danger" href="/logout">Log Out</a>
+                        {% else %}
+                        <a class="btn btn-outline-info" href="/login">Log In</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container">
+                <div class="m-3 bg-primary p-5 text-center shadow-sm">
+                    <div class="mx-auto">
+                        <h1 class="fw-bold display-2 text-center text-light">Zane API</h1>
+                        <p class="lead text-center text-light">Image manipulation for the layman</p>
+                        <a href="https://docs.zane.ip-bash.com/" class="btn bg-light text-primary fw-bold me-1">Read The Docs</a>
+                        <a href="/login" class="btn bg-light text-primary fw-bold">Sign Up</a>
+                    </div>
+                </div>
+
+                <div class="row mx-3 gap-3">
+                    <div class="col p-5 bg-light col-md-offset-2 shadow-sm">
+                        <div class="mx-auto text-center">
+                            <h1 class="fw-bold display-6 text-dark">Thorough Documentation</h1>
+                            <p class="text-dark">With our <a class="hyperlink" href="https://docs.zane.ip-bash.com/"> documentation</a>, you can see every endpoints parameters and an example request to get you started.</p>
+                        </div>
+                    </div>
+                    <div class="col p-5 bg-light col-md-offset-2 shadow-sm">
+                        <div class="mx-auto text-center">
+                            <h1 class="fw-bold display-6 text-dark">Trusted Infrastructure</h1>
+                            <p class="text-dark">Built on the power of <a class="hyperlink" href="https://python.org">Python</a>, <a class="hyperlink" href="https://cloudflare.com">Cloudflare</a>, <a class="hyperlink" href="https://redis.io">Redis</a>, and <a class="hyperlink" href="https://aws.amazon.com">Amazon</a>. I don't think you will be seeing much unexpected downtime.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m-3 gap-3">
+                    <div class="col p-5 col-md-offset-2 bg-light shadow-sm">
+                        <div class="mx-auto text-center">
+                            <h1 id="user_count" class="fw-bold display-1 text-dark pb-0">--</h1>
+                            <h3 class="text-dark display-4 fw-bold pt-0">Users</h3>
+                        </div>
+                    </div>
+                    <div class="col p-5 col-md-offset-2 bg-light shadow-sm">
+                        <div class="mx-auto text-center">
+                            <h1 class="fw-bold display-1 text-dark pb-0">16</h1>
+                            <h3 class="text-dark display-4 fw-bold pt-0">Endpoints</h3>
+                        </div>
+                    </div>
+                    <div class="col p-5 col-md-offset-2 bg-light shadow-sm">
+                        <div class="mx-auto text-center">
+                            <h1 id="usage_count" class="fw-bold display-1 text-dark pb-0">--</h1>
+                            <h3 class="text-dark display-4 fw-bold pt-0">Requests</h3>
+                        </div>
+                    </div>
+                </div>
+                <p class="ms-3 text-muted">Copyright Liam H. 2021 - linK#0001 - linKhehe</p>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script>
+            $.getJSON("/api/user_count", function(d){
+                $("#user_count").text(d.user_count)
+            })
+
+            $.getJSON("/api/usage_count", function(d){
+                $("#usage_count").text(d.usage_count)
+            })
+        </script>
+    </body>
+</html>
