@@ -32,6 +32,13 @@ def usage_count():
     return flask.jsonify({"usage_count": int(count)})
 
 
+@bp.route("/home_stats")
+def usage_count():
+    useage_count = current_app.redis.get("usage_count").decode()
+    user_count = current_app.redis.get("user_count").decode()
+    return flask.jsonify({"usage_count": int(useage_count), "user_count": int(user_count)})
+
+
 @bp.route("/auth")
 def auth():
     token = request.args.get("token", request.headers.get("Authorization"))
